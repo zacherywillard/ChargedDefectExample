@@ -1,0 +1,30 @@
+#!/bin/bash 
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=12
+#SBATCH --mem=32GB
+#SBATCH --time=12:00:00
+#SBATCH --account=open
+#SBATCH --partition=open
+
+#make sure junk does not get written to my home folder
+echo "Job Info..."
+echo "Job ID:        $SLURM_JOB_ID"
+echo "Num Nodes:     $SLURM_JOB_NUM_NODES"
+echo "Proc Per Node: $SLURM_NTASKS_PER_NODE"
+# get number of cpus
+NP=$(($SLURM_NTASKS_PER_NODE * $SLURM_JOB_NUM_NODES))
+echo "Total Procs:   $NP"
+echo " "
+
+echo "Loading Modules..."
+module purge
+module use /gpfs/group/RISE/sw7/modules
+module load vasp/vasp-6.4.1v
+module load intel/2021.4.0
+module load impi/2021.4.0
+module load mkl/2021.4.0
+module list
+echo " "
+
+srun vasp_std >outfile
+
